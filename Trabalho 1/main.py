@@ -1,4 +1,5 @@
-from classes import Aluguel, Veiculo, Cliente
+from classes import Aluguel, Veiculo, Cliente, SistemaAluguel
+from datetime import datetime
 
 def verifica_placa(lista_carros, placa):
         for p in lista_carros:
@@ -43,7 +44,7 @@ lista_clientes = []
 c = Cliente("André", "13182036947", "48999985432", "andrefilipmartins@gmail.com", "123456789", 0)
 lista_clientes.append(c)
 
-flag = False
+formato = "%d/%m/%Y"
 
 while True:
     print("Bem vindo ao sistema de aluguel de veículos, escolha uma opção desejada: ")
@@ -51,7 +52,8 @@ while True:
     print("2- Cadastrar um cliente")
     print("5- Encerrar programa")
     op = int(input())
-    
+    flag = False
+
     match op:
         case 1:
             print("Você escolheu cadastrar um veículo.")
@@ -97,12 +99,20 @@ while True:
                     print("Digite as informações necessárias a seguir: ")
                     datai = input("Digite a data de retirada do veículo(dia/mês/ano): ")
                     dataf = input("Digite a data de entrega do veículo(dia/mês/ano): ")
-                    
-                    
-                    
-                else:
-                    print("O CPF digitado não está cadastrado no sistema. Tente novamente.")
-                    break
+                    data_i = datetime.strptime(datai, formato).date()
+                    data_f = datetime.strptime(dataf, formato).date()
+                    dias = (data_f-data_i).days
+                    flag=True
+            if not flag:
+                print("O CPF digitado não existe no sistema, tente novamente: ")
+                continue
+            print("Dê uma olhada nos carros disponíveis: ")
+            for i in lista_carros:
+                if i.get_status() == "Disponível" :
+                    print(i)
+            alg = input("Agora, digite o nome do carro que deseja alugar: ")
+            aluguel()
+            
                 
 
             

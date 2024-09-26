@@ -1,4 +1,3 @@
-
 class Veiculo:
     def __init__(self, nome, placa, cor, ano, marca, tipo, valor, kmi, status):
         self.tipo = tipo
@@ -11,8 +10,21 @@ class Veiculo:
         self.kmi = kmi
         self.status = status
 
+    def __str__(self):
+        return f"{self.marca} {self.nome} -- Placa: {self.placa}, Cor: {self.cor}, Ano: {self.ano}, Categoria: {self.tipo}, Valor por dia: R$ {self.valor}, Quilometragem= {self.kmi}km)"
+        
     def get_placa(self):
         return self.placa
+    
+    def get_valor(self):
+        return self.valor
+    
+    def get_status(self):
+        return self.status
+    
+    def set_status(self,status):
+        self.status = status
+        
     
     
     
@@ -54,7 +66,18 @@ class Aluguel:
 
 
 class SistemaAluguel:
-    def __init__(self,) -> None:
+    def __init__(self):
         pass
+
+    def aluguel(self, alg, lista_carros):
+        for i in lista_carros:
+            if i.get_placa() == alg:
+                i.set_status("Alugado")
+                print("Veículo alugado com sucesso!")
+                break
+            
+                
+
+
 
 #VALUES ({self.nome}, {self.placa}, {self.cor}, {self.ano}, {self.marca}, {self.tipo}, {self.valor})
