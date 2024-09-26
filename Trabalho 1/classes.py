@@ -1,7 +1,6 @@
-import sqlite3
 
 class Veiculo:
-    def __init__(self, nome, placa, cor, ano, marca, tipo, valor, status):
+    def __init__(self, nome, placa, cor, ano, marca, tipo, valor, kmi, status):
         self.tipo = tipo
         self.cor = cor
         self.nome = nome
@@ -9,19 +8,18 @@ class Veiculo:
         self.marca = marca
         self.ano = ano
         self.valor = valor
+        self.kmi = kmi
         self.status = status
+
+    def get_placa(self):
+        return self.placa
     
-    def cadastro(self):
-        cx = sqlite3.connect('aluguel.db')
-        cr = cx.cursor()
-        
-        cr.execute(f'''
-            INSERT INTO carros (nome, placa, cor, ano, marca, tipo, valor)
-            VALUES ({self.nome}, {self.placa}, {self.cor}, {self.ano}, {self.marca}, {self.tipo}, {self.valor})
-        ''')
-        cx.commit()
-        cx.close()
-        print("Cadastro realizado com sucesso!")
+    
+    
+
+
+
+    
         
 class Cliente:
     def __init__(self, nome_cliente, cpf, tel, email, cnh, historico):
@@ -31,12 +29,26 @@ class Cliente:
         self.tel = tel
         self.email = email
         self.historico = historico
+    
+    def get_nome(self):
+        return self.nome_cliente
+    
+    def get_cpf(self):
+        return self.cpf
+    
+    def get_tel(self):
+        return self.tel
+    
+    def get_email(self):
+        return self.email
+    
+    def get_cnh(self):
+        return self.cnh
 
 class Aluguel:
-    def __init__(self, datai, dataf, kmi, valort, sts_pagamento): 
+    def __init__(self, datai, dataf, valort, sts_pagamento): 
         self.datai = datai
         self.dataf = dataf
-        self.kmi = kmi
         self.valort = valort
         self.sts_pagamento = sts_pagamento
 
@@ -44,3 +56,5 @@ class Aluguel:
 class SistemaAluguel:
     def __init__(self,) -> None:
         pass
+
+#VALUES ({self.nome}, {self.placa}, {self.cor}, {self.ano}, {self.marca}, {self.tipo}, {self.valor})
