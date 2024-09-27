@@ -60,12 +60,17 @@ class Cliente:
         return self.cnh
 
 class Aluguel:
-    def __init__(self, datai, dataf, valort, sts_pagamento): 
+    def __init__(self, carro_alugado, pessoa_alugou, datai, dataf, valort, sts_pagamento): 
+        self.carro_alugado = carro_alugado
+        self.pessoa_alugou = pessoa_alugou
         self.datai = datai
         self.dataf = dataf
         self.valort = valort
         self.sts_pagamento = sts_pagamento
-
+    
+    def __str__(self):
+        return f"Alugado: {self.carro_alugado}, Cliente: {self.pessoa_alugou}, Datas: {self.datai} até {self.dataf}, Valor total: {self.valort}, Pago: {self.sts_pagamento}."
+        
 
 class SistemaAluguel:
     def __init__(self):
@@ -82,9 +87,7 @@ class SistemaAluguel:
         else:
             print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
     
-    def pagar(self, dias, valor, lista_carros, esc):
-        #pg_aux = next((carro for carro in lista_carros if carro.get_valor() == valor))
-
+    def pagar(self, dias, esc):
         valorpagar = esc.get_valor()*dias
         print(f"O cliente terá que pagar {valorpagar}")
         return valorpagar

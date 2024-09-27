@@ -32,15 +32,14 @@ def verifica_cnh(lista_clientes, cnh):
         return cnh
 
 aux = SistemaAluguel()
-
+lista_alugueis = []
 lista_carros = []
+lista_clientes = []
 
 v = Veiculo("Uno","ABC-1234", "Preto", "2020","Fiat", "Hatch", 130, 60000, "Disponível")
 lista_carros.append(v)
 v= Veiculo("Kwid", "HFM-7421", "Branco","2019","Renault","Hatch", 120, 70000, "Manutenção")
 lista_carros.append(v)
-
-lista_clientes = []
 
 c = Cliente("André", "13182036947", "48999985432", "andrefilipmartins@gmail.com", "123456789", 0)
 lista_clientes.append(c)
@@ -51,7 +50,10 @@ while True:
     print("Bem vindo ao sistema de aluguel de veículos, escolha uma opção desejada: ")
     print("1- Cadastrar um veículo para alugar")
     print("2- Cadastrar um cliente")
+    print("3- Processo de aluguel")
+
     print("5- Encerrar programa")
+
     op = int(input())
     flag = False
 
@@ -116,6 +118,19 @@ while True:
 
             print("Ok. Prossiga agora para o pagamento: ")
             valorpagar = aux.pagar(dias, esc.get_valor(), lista_carros, esc)
+            pgmt = input("Pagamento já foi realizado? (S ou N)").upper()
+            match pgmt:
+                case "S":
+                    a = Aluguel(esc.get_placa(), esc.get_nome(), datai, dataf,valorpagar,pgmt)
+                    lista_alugueis.append(a)
+                case "N":
+                    esc.set_status("Disponível")
+                    print("Como não houve pagamento ainda, o aluguel ficará pendente até a realização do pagamento.")
+                    a = Aluguel(esc.get_placa(), esc.get_nome(), datai, dataf,valorpagar,"Pendente")
+                    lista_alugueis.append(a)
+                case _:
+                    print("Opção inválida. Tente novamente depois.")
+            
 
             
             
