@@ -31,6 +31,7 @@ def verifica_cnh(lista_clientes, cnh):
                  cnh = input("Esse(a) cliente já está cadastrado no sistema, por favor digite o número da CNH corretamente: ")
         return cnh
 
+aux = SistemaAluguel()
 
 lista_carros = []
 
@@ -106,12 +107,17 @@ while True:
             if not flag:
                 print("O CPF digitado não existe no sistema, tente novamente: ")
                 continue
-            print("Dê uma olhada nos carros disponíveis: ")
+            print("Aqui estão os carros disponíveis: ")
             for i in lista_carros:
                 if i.get_status() == "Disponível" :
                     print(i)
-            alg = input("Agora, digite o nome do carro que deseja alugar: ")
-            aluguel()
+            alg = input("Agora, digite a placa do carro que deseja alugar: ")
+            esc = aux.aluga(alg, lista_carros)
+
+            print("Ok. Prossiga agora para o pagamento: ")
+            valorpagar = aux.pagar(dias, esc.get_valor(), lista_carros, esc)
+
+            
             
                 
 

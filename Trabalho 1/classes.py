@@ -24,7 +24,9 @@ class Veiculo:
     
     def set_status(self,status):
         self.status = status
-        
+    
+    def get_nomecarro(self):
+        return self.nome
     
     
     
@@ -69,12 +71,31 @@ class SistemaAluguel:
     def __init__(self):
         pass
 
-    def aluguel(self, alg, lista_carros):
-        for i in lista_carros:
-            if i.get_placa() == alg:
-                i.set_status("Alugado")
-                print("Veículo alugado com sucesso!")
-                break
+    def aluga(self, alg, lista_carros):
+        
+        carro_aux = next((carro for carro in lista_carros if carro.get_placa() == alg), None)
+
+        if carro_aux:
+            carro_aux.set_status("Alugado")
+            print(f"Veículo com placa {carro_aux.get_placa()} alugado com sucesso!")
+            return carro_aux
+        else:
+            print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+    
+    def pagar(self, dias, valor, lista_carros, esc):
+        #pg_aux = next((carro for carro in lista_carros if carro.get_valor() == valor))
+
+        valorpagar = esc.get_valor()*dias
+        print(f"O cliente terá que pagar {valorpagar}")
+        return valorpagar
+
+        
+
+
+            
+            
+
+
             
                 
 
