@@ -93,44 +93,116 @@ while True:
             print("Cliente cadastrado no sistema com sucesso!\n")
 
         case 3:
-            print("Você escolheu alugar um carro.")
-            cpf_aluga = input("Digite o CPF que deseja alugar um carro: ")
-            
-            for i in lista_clientes:
-                if cpf_aluga == i.get_cpf():
-                    print(f"Certo. {i.get_nome()} está no sistema.")
-                    print("Digite as informações necessárias a seguir: ")
-                    datai = input("Digite a data de retirada do veículo(dia/mês/ano): ")
-                    dataf = input("Digite a data de entrega do veículo(dia/mês/ano): ")
-                    data_i = datetime.strptime(datai, formato).date()
-                    data_f = datetime.strptime(dataf, formato).date()
-                    dias = (data_f-data_i).days
-                    flag=True
-            if not flag:
-                print("O CPF digitado não existe no sistema, tente novamente: ")
-                continue
-            print("Aqui estão os carros disponíveis: ")
-            for i in lista_carros:
-                if i.get_status() == "Disponível" :
-                    print(i)
-            alg = input("Agora, digite a placa do carro que deseja alugar: ")
-            esc = aux.aluga(alg, lista_carros)
+            opA = int(input("Escolha 1 se deseja realizar o processo do aluguel.\nEscolha 2 se deseja ver a lista de processos em andamento/pendentes.\n"))
+            match opA:
+                case 1:
+                    print("Você escolheu alugar um carro.")
+                    cpf_aluga = input("Digite o CPF que deseja alugar um carro: ")
+                    
+                    for i in lista_clientes:
+                        if cpf_aluga == i.get_cpf():
+                            print(f"Certo. {i.get_nome()} está no sistema.")
+                            print("Digite as informações necessárias a seguir: ")
+                            datai = input("Digite a data de retirada do veículo(dia/mês/ano): ")
+                            dataf = input("Digite a data de entrega do veículo(dia/mês/ano): ")
+                            data_i = datetime.strptime(datai, formato).date()
+                            data_f = datetime.strptime(dataf, formato).date()
+                            dias = (data_f-data_i).days
+                            flag=True
+                            clienteaux = i
+                    if not flag:
+                        print("O CPF digitado não existe no sistema, tente novamente: ")
+                        continue
+                    print("Aqui estão os carros disponíveis: ")
+                    for i in lista_carros:
+                        if i.get_status() == "Disponível" :
+                            print(i)
+                    alg = input("Agora, digite a placa do carro que será alugado: ")
+                    esc = aux.aluga(alg, lista_carros)
 
-            print("Ok. Prossiga agora para o pagamento: ")
-            valorpagar = aux.pagar(dias, esc.get_valor(), lista_carros, esc)
-            pgmt = input("Pagamento já foi realizado? (S ou N)").upper()
-            match pgmt:
-                case "S":
-                    a = Aluguel(esc.get_placa(), esc.get_nome(), datai, dataf,valorpagar,pgmt)
-                    lista_alugueis.append(a)
-                case "N":
-                    esc.set_status("Disponível")
-                    print("Como não houve pagamento ainda, o aluguel ficará pendente até a realização do pagamento.")
-                    a = Aluguel(esc.get_placa(), esc.get_nome(), datai, dataf,valorpagar,"Pendente")
-                    lista_alugueis.append(a)
+                    print("Ok. Prossiga agora para o pagamento: ")
+                    valorpagar = aux.pagar(dias,esc)
+                    pgmt = input("Pagamento já foi realizado? (S ou N)").upper()
+                    match pgmt:
+                        case "S":
+                            esc.set_status("Alugado")
+                            a = Aluguel(esc.get_placa(), clienteaux.get_cpf(), datai, dataf,valorpagar,"Pago")
+                            lista_alugueis.append(a)
+                            print("Processo de aluguel feito com sucesso.\n")
+
+                        case "N":
+                            esc.set_status("Pendente")
+                            print("Como não houve pagamento ainda, o aluguel ficará pendente até a realização do pagamento.")
+                            a = Aluguel(esc.get_placa(), clienteaux.get_cpf(), datai, dataf,valorpagar,"Pendente")
+                            lista_alugueis.append(a)
+                        case _:
+                            print("Opção inválida. Tente novamente depois.")
+                case 2:
+                    if len(lista_alugueis) == 0:
+                        print("Ainda não existe nenhum processo em andamento ou pendente.")
+                    else:
+                        for i in lista_alugueis:
+                            print(i)
                 case _:
                     print("Opção inválida. Tente novamente depois.")
             
+        case 4:
+            print("Você escolheu realizar a devolução de um veículo.")
+            print("Por favor, responda as questões a seguir: ")
+            placa_dev = input("Digite a placa do carro que será devolvido à frota: ")
+            cpf_dev = input("Digite o CPF cadastrado no aluguel em questão: ")
+            dev, flag = aux.devolucao_check(placa_dev, lista_alugueis)
+            if not flag:
+                continue
+            kmnovo = int(input("O veículo está com quantos quilômetros rodados agora?: "))
+            
+            
+            atraso_bool = input("Houve atraso para a devolução? (S ou N): ").upper()
+            match atraso_bool:
+                case "S":
+                    atraso_dias = int(input("Quantos dias de atraso?: "))
+                    print(f"Nesse caso, o valor a pagar será de R$ {atraso_dias*50} como multa pelo atraso.")
+                case "N":
+                    print("Sem multa.")
+                case _:
+                    print("Digitação inválida.")
+                    continue
+            batida = input("Durante o período alugado, houve alguma acidente ou batida? (S ou N): ").upper()
+            match batida:
+                case "S":
+                    aux.batida(placa_dev,lista_carros)
+                    lista_alugueis.pop(esc)
+                case "N":
+                    aux.devolucao(placa_dev, lista_carros)
+                    lista_alugueis.pop(esc)
+                case _:
+                    print("Digitação inválida.")
+                    continue
+        
+        case 5:
+            print("Você selecionou o relatório do sistema:\n")
+            print("Carros da frota:")
+            if len(lista_carros) == 0:
+                    print("A frota de carros está vazia.")
+            else:
+                for i in lista_carros:
+                    print(i)
+            print("\nClientes cadastrados: ")
+            if len(lista_clientes) == 0:
+                    print("Não há cliente cadastrado.")
+            else:
+                for i in lista_clientes:
+                    print(i)
+
+            
+
+            
+
+                    
+                    
+
+
+
 
             
             
@@ -176,7 +248,7 @@ while True:
         
         
         
-        case 5:
+        case 6:
             break
         case _:
             print("Opção inválida! Por favor análise as opções e escolha novamente.\n")
