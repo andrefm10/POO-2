@@ -13,6 +13,7 @@ class Veiculo:
     def __str__(self):
         return f"{self.marca} {self.nome} -- Placa: {self.placa}, Cor: {self.cor}, Ano: {self.ano}, Categoria: {self.tipo}, Valor por dia: R$ {self.valor}, Quilometragem= {self.kmi}km, {self.status})"
         
+    
     def get_placa(self):
         return self.placa
     
@@ -46,6 +47,10 @@ class Cliente:
         self.tel = tel
         self.email = email
         self.historico = historico
+    
+    def __str__(self):
+        return f"{self.nome_cliente} -- CPF: {self.cpf}, Telefone: {self.tel}, E-mail: {self.email}, Nº CNH: {self.cnh}, {self.historico} aluguéis realizados."
+        
     
     def get_nome(self):
         return self.nome_cliente
@@ -97,16 +102,85 @@ class SistemaAluguel:
     def __init__(self):
         pass
 
+    
+    def verifica_placa(self, lista_carros, placa): 
+        for p in lista_carros:
+            while placa == p.get_placa():
+                 placa = input("Essa placa já está na frota de carros, por favor digite corretamente: ")
+        return placa
+    
+    def verifica_cpf(self, lista_clientes, cpf):
+        for i in lista_clientes:
+            while cpf == i.get_cpf():
+                 cpf = input("Esse(a) cliente já está cadastrado no sistema, por favor digite o CPF corretamente: ")
+        return cpf
+    
+    def verifica_tel(self, lista_clientes, tel):
+        for i in lista_clientes:
+            while tel == i.get_tel():
+                 tel = input("Esse(a) cliente já está cadastrado no sistema, por favor digite o telefone corretamente: ")
+        return tel
+    
+    def verifica_email(self, lista_clientes, email):
+        for i in lista_clientes:
+            while email == i.get_email():
+                 email = input("Esse(a) cliente já está cadastrado no sistema, por favor digite o e-mail corretamente: ")
+        return email
+
+    def verifica_cnh(self, lista_clientes, cnh):
+        for i in lista_clientes:
+            while cnh == i.get_cnh():
+                 cnh = input("Esse(a) cliente já está cadastrado no sistema, por favor digite o número da CNH corretamente: ")
+        return cnh
+    
+    
+    
+    def cadastro_carro(self, lista_carros,aux):
+        nome_carro = input("Nome do carro: ")
+        placa = input("Placa: ")
+        placa = aux.verifica_placa(lista_carros,placa)
+        cor = input("Cor: ")
+        ano = input("Ano de fabricação: ")
+        marca = input("Marca: ")
+        cat = input("Categoria: ")
+        valor = float(input("Valor por dia: "))
+        kmi = int(input("Digite a quilometragem do carro: "))
+        vi = Veiculo(nome_carro, placa, cor, ano, marca, cat, valor, kmi, "Disponível")
+        lista_carros.append(vi)
+        print("Veículo cadastrado no sistema com sucesso!\n")
+
+    
+    def cadastro_cliente(self, lista_clientes, aux):
+        nome_cliente = input("Nome: ")
+        cpf = input("CPF(Sem traços): ")
+        cpf = aux.verifica_cpf(lista_clientes,cpf)
+        tel = input("Telefone(Sem traços): ")
+        tel = aux.verifica_tel(lista_clientes,tel)
+        email = input("E-mail: ") 
+        email = aux.verifica_email(lista_clientes, email)
+        cnh = input("Número da CNH: ")
+        cnh = aux.verifica_cnh(lista_clientes, cnh)
+        ci = Cliente(nome_cliente, cpf, tel, email, cnh, 0 )
+        lista_clientes.append(ci)
+        print("Cliente cadastrado no sistema com sucesso!\n")
+    
+    
+    
+    
+    
+    
     def aluga(self, alg, lista_carros):
         
         carro_aux = next((carro for carro in lista_carros if carro.get_placa() == alg), None)
 
-        if carro_aux:
-            
+        if carro_aux:  
             print(f"Veículo com placa {carro_aux.get_placa()} será alugado.")
-            return carro_aux
+            flag = True
+                
         else:
             print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+            flag = False
+        return carro_aux, flag
     
     def pagar(self, dias, esc):
         valorpagar = esc.get_valor()*dias
@@ -135,6 +209,7 @@ class SistemaAluguel:
             
         else:
             print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+    
 
     def devolucao(self, alg, lista_carros):
         
@@ -151,7 +226,20 @@ class SistemaAluguel:
 
         client_aux = next((cliente for cliente in lista if cliente.get_cpf() == cpf), None)
 
-    #def km
+        if client_aux:
+            client_aux.set_historico((client_aux.get_historico()) + 1)
+        
+
+    def kmdev(self, alg, km, lista):
+        carro_aux = next((carro for carro in lista if carro.get_placa() == alg), None)
+
+        if carro_aux:
+            carro_aux.set_kmi(km)
+            print(f"Veículo com placa {carro_aux.get_placa()} teve sua quilometragem atualizada.")
+            
+        else:
+            print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+        
         
         
 
