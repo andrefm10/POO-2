@@ -17,13 +17,14 @@ lista_clientes.append(c)
 formato = "%d/%m/%Y"
 
 while True:
-    print("Bem vindo ao sistema de aluguel de veículos, escolha uma opção desejada: ")
+    print("\nBem vindo ao sistema de aluguel de veículos, escolha uma opção desejada: ")
     print("1- Cadastrar um veículo para alugar")
     print("2- Cadastrar um cliente")
     print("3- Alugar/Relatório de aluguéis")
     print("4- Processo de devolução")
     print("5- Relatório do sistema")
-    print("6- Encerrar programa")
+    print("6- Realizar pagamento/manutenção")
+    print("7- Encerrar programa")
 
     op = int(input())
     flag = False
@@ -148,63 +149,30 @@ while True:
             else:
                 for i in lista_clientes:
                     print(i)
-
-            
-
-            
-
-                    
-                    
-
-
-
-
-            
-            
-                
-
-            
-
-
-            
-            
-              
-
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         case 6:
+            print("Escolha uma das opções a seguir:")
+            print("1- Pagar pendência")
+            print("2- Realizar manutenção")           
+            opB = int(input())
+
+            match opB:
+                case 1:
+                    plc = input("Digite a placa do carro que está com pagamento pendente: ")
+                    aux.pagamento(plc,lista_alugueis, lista_carros)
+
+                case 2:
+                    print("Veja os carros da frota que estão em manutenção")
+                    for i in lista_carros: 
+                        if i.get_status() == "Manutenção" :
+                            print(i)
+                    man = input("Digite a placa do carro que deseja realizar a manutenção: ")
+                    aux.arrumar(man,lista_carros)
+
+
+
+        case 7:
             break
         case _:
-            print("Opção inválida! Por favor análise as opções e escolha novamente.\n")
+            print("Opção inválida! Por favor análise as opções e escolha novamente.")
 

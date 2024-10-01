@@ -97,6 +97,12 @@ class Aluguel:
     
     def get_placa_alugou(self):
         return self.carro_alugado
+    
+    def get_sts(self):
+        return self.sts_pagamento
+    
+    def set_sts(self,sts_pagamento):
+        self.sts_pagamento = sts_pagamento
 
 class SistemaAluguel:
     def __init__(self):
@@ -236,6 +242,26 @@ class SistemaAluguel:
         if carro_aux:
             carro_aux.set_kmi(km)
             print(f"Veículo com placa {carro_aux.get_placa()} teve sua quilometragem atualizada.")
+            
+        else:
+            print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+
+    def pagamento(self, alg, lista_alugueis, lista_carros):
+        aluguel_aux = next((carro for carro in lista_alugueis if carro.get_placa_alugou() == alg), None)
+        carro_aux = next((carro for carro in lista_carros if carro.get_placa() == alg), None)
+
+        if aluguel_aux and carro_aux:
+            aluguel_aux.set_sts("Pago")
+            carro_aux.set_status("Alugado")
+        else:
+            print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
+
+    def arrumar(self, alg, lista):
+        carro_aux = next((carro for carro in lista if carro.get_placa() == alg), None)
+
+        if carro_aux:
+            carro_aux.set_status("Disponível")
+            print(f"Veículo com placa {carro_aux.get_placa()} agora está disponível.")
             
         else:
             print("Veículo não encontrado no sistema. Tente novamente mais tarde.")
